@@ -1,79 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Compressor</title>
     <script src="https://cdn.jsdelivr.net/npm/compressorjs@1.2.1/dist/compressor.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        input, button {
-            margin-top: 10px;
-        }
-        .file-info {
-            margin-top: 10px;
-        }
-        .download {
-            display: none;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h2>Image Compressor</h2>
         <input type="file" id="imageInput" accept="image/*">
         <div class="file-info" id="fileInfo"></div>
+        <label for="quality">Quality (0.1 - 1):</label>
+        <input type="number" id="quality" min="0.1" max="1" step="0.1" value="0.6">
         <button id="downloadBtn" class="download">Download Compressed Image</button>
     </div>
 
-    <script>
-        function humanFileSize(size) {
-            let i = Math.floor(Math.log(size) / Math.log(1024));
-            return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB'][i];
-        }
-
-        document.getElementById('imageInput').addEventListener('change', function (event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            document.getElementById('fileInfo').innerHTML = `Original Size: ${humanFileSize(file.size)}`;
-
-            new Compressor(file, {
-                quality: 0.6,
-                success(result) {
-                    const compressedBlob = result;
-                    document.getElementById('fileInfo').innerHTML += `<br>Compressed Size: ${humanFileSize(compressedBlob.size)}`;
-                    
-                    const downloadBtn = document.getElementById('downloadBtn');
-                    const url = URL.createObjectURL(compressedBlob);
-                    downloadBtn.style.display = 'inline-block';
-                    downloadBtn.onclick = function() {
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'compressed-image.jpg';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    };
-                },
-                error(err) {
-                    console.error(err.message);
-                },
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
