@@ -1,24 +1,25 @@
 function humanFileSize(size) {
-    let i = Math.floor(Math.log(size) / Math.log(1024));
-    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB'][i];
+    const i = Math.floor(Math.log(size) / Math.log(1024));
+    return (size / Math.pow(1024, i)).toFixed(2) + ' ' + ['B', 'KB', 'MB', 'GB'][i];
 }
 
 document.getElementById('imageInput').addEventListener('change', function (event) {
     const file = event.target.files[0];
     if (!file) return;
-
-    document.getElementById('fileInfo').innerHTML = `Original Size: ${humanFileSize(file.size)}`;
-
+    
+    const fileInfo = document.getElementById('fileInfo');
+    fileInfo.innerHTML = `Original Size: ${humanFileSize(file.size)}`;
+    const quality = parseFloat(document.getElementById('quality').value);
+    
     new Compressor(file, {
-        quality: 0.6,
+        quality: quality,
         success(result) {
-            const compressedBlob = result;
-            document.getElementById('fileInfo').innerHTML += `<br>Compressed Size: ${humanFileSize(compressedBlob.size)}`;
+            fileInfo.innerHTML += `<br>Compressed Size: ${humanFileSize(result.size)}`;
             
             const downloadBtn = document.getElementById('downloadBtn');
-            const url = URL.createObjectURL(compressedBlob);
+            const url = URL.createObjectURL(result);
             downloadBtn.style.display = 'inline-block';
-            downloadBtn.onclick = function() {
+            downloadBtn.onclick = () => {
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = 'compressed-image.jpg';
